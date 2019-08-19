@@ -71,7 +71,7 @@ class HTML:
         return self
 
     def __exit__(self, type, value, traceback):
-
+        result =''
         if self.children:
             opening = "<{tag}>".format(tag=self.tag)
             internal = "\n"
@@ -79,10 +79,17 @@ class HTML:
                 internal += str(child)
                 internal +="\n"
             ending = "</%s>" % self.tag
-            print(opening + internal + ending)
+            result = opening + internal + ending
         else:
-            print("<%s>" % self.tag)
-            print("</%s>" % self.tag)
+            result = "<%s>" % self.tag
+            result+= "</%s>" % self.tag
+        if self.output is None:
+            print (result)
+        else:
+            with open(self.output,'w') as fp:
+                fp.write(result)
+        return self
+
 
 
 
@@ -130,7 +137,7 @@ class TopLevelTag:
 
 
 if __name__ == "__main__":
-    with HTML(output=None) as doc:
+    with HTML(output='hmrk.html') as doc:
         with TopLevelTag("head") as head:
             with Tag("title") as title:
                 title.text = "hello"
